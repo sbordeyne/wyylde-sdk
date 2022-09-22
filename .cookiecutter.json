@@ -1,0 +1,13 @@
+{
+  "_template": "hp",
+  "author": "Dogeek <simon.bordeyne@gmail.com>",
+  "copyright_year": "2022",
+  "development_status": "Development Status :: 5 - Production/Stable",
+  "email": "simon.bordeyne@gmail.com",
+  "friendly_name": "Wyylde SDK",
+  "github_user": "Dogeek",
+  "license": "MIT",
+  "package_name": "wyylde_sdk",
+  "project_name": "wyylde-sdk",
+  "version": "1.0.0"
+}
