@@ -2,7 +2,7 @@
 name = "wyylde-sdk"
 version = "1.0.0"
 description = "Wyylde SDK"
-authors = ["Dogeek <simon.bordeyne@gmail.com> <simon.bordeyne@gmail.com>"]
+authors = ["Dogeek <simon.bordeyne@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/Dogeek/wyylde-sdk"
