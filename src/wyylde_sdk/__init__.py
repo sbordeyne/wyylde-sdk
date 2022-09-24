@@ -1,6 +1,6 @@
 """Wyylde SDK."""
 
 from .client import WyyldeClient
-import models
+from . import models
 
-__version__ = '1.1.0'
+__version__ = '1.1.1'
