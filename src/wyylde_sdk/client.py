@@ -1,6 +1,6 @@
 from datetime import datetime
 import sys
-from typing import Iterable, TypeVar, Type
+from typing import Any, Iterable, Optional, TypeVar, Type
 
 import requests
 from dacite import from_dict, MissingValueError
@@ -24,10 +24,25 @@ class Session(requests.Session):
         self._authenticate(username, password)
 
     @property
-    def now_ts(self):
-        return int(datetime.now().timestamp() * 1000)
+    def now_ts(self) -> str:
+        '''
+        Property that returns the current timestamp as a string.
 
-    def _authenticate(self, username: str, password: str):
+        :return: Current timestamp
+        :rtype: str
+        '''
+        return str(int(datetime.now().timestamp() * 1000))
+
+    def _authenticate(self, username: str, password: str) -> None:
+        '''
+        Function that performs the authentication to wyylde using the provided username/password
+        Sets the Authorization header of the session.
+
+        :param username: Wyylde username
+        :type username: str
+        :param password: Wyylde password
+        :type password: str
+        '''
         payload = {
             "login": username,
             "password": password,
@@ -43,12 +58,34 @@ class Session(requests.Session):
         self.headers['Authorization'] = f"Bearer {response['data']['token']}"
         return
 
-    def make_params(self, **extra):
+    def make_params(self, **extra) -> dict[str, Any]:
+        '''
+        Helper function that injects the 'nocache' URI param into the parameters.
+
+        :return: New params dictionary
+        :rtype: dict[str, Any]
+        '''
         params = {'nocache': self.now_ts}
         params.update(extra)
         return params
 
-    def get_generate(self, endpoint: str, klass: Type[T], params=None) -> Iterable[T]:
+    def get_generate(
+        self, endpoint: str, klass: Type[T], params: Optional[dict[str, Any]]=None
+    ) -> Iterable[T]:
+        '''
+        Generator function that yields elements of an array as their corresponding models.
+
+        :param endpoint: Endpoint of the Wyylde API to call
+        :type endpoint: str
+        :param klass: The model to cast the objects as
+        :type klass: Type[T]
+        :param params: Additional URI params to pass on, nocache is set by default, defaults to None
+        :type params: Optional[dict[str, Any]], optional
+        :return: None
+        :rtype: Iterable[T]
+        :yield: Iterator of objects of type T as returned by the API.
+        :rtype: Iterator[Iterable[T]]
+        '''
         params = params or {}
         params = self.make_params(**params)
         response = self.get(
@@ -78,7 +115,6 @@ class Session(requests.Session):
 class WyyldeClient:
     def __init__(self, username: str, password: str):
         super().__init__()
-        self.wyylde_version = '4.1.0'
         self.session = Session(username, password)
 
     @property
@@ -107,7 +143,7 @@ class WyyldeClient:
     @property
     def events(self) -> Iterable[EventResource]:
         params = {
-            'version': self.wyylde_version,
+            'version': self.session.wyylde_version,
             'nb': 30,
             'location': '48.85917,2.31278',
             'radius': 30
@@ -118,8 +154,8 @@ class WyyldeClient:
 
     def user(self, user_id: str) -> UserResource:
         params = {
-            'nocache': str(self.now_ts),
-            'version': self.wyylde_version,
+            'nocache': self.session.now_ts,
+            'version': self.session.wyylde_version,
         }
         response = self.session.get(
             f'https://www.wyylde.com/rest/profile/{user_id}',
@@ -132,7 +168,7 @@ class WyyldeClient:
     @property
     def visits(self) -> Iterable[VisitResource]:
         params = {
-            'version': self.wyylde_version,
+            'version': self.session.wyylde_version,
         }
         return self.session.get_generate(
             'my/visits', VisitResource, params=params

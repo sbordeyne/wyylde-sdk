@@ -213,6 +213,22 @@ docs = ["furo (>=2022.6.21)", "sphinx (>=5.1.1)", "sphinx-autodoc-typehints (>=1
 testing = ["covdefaults (>=2.2)", "coverage (>=6.4.2)", "pytest (>=7.1.2)", "pytest-cov (>=3)", "pytest-timeout (>=2.1)"]
 
 [[package]]
+name = "fixtures"
+version = "4.0.1"
+description = "Fixtures, reusable state for writing clean tests and more."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+pbr = ">=5.7.0"
+
+[package.extras]
+docs = ["docutils"]
+streams = ["testtools"]
+test = ["mock", "testtools"]
+
+[[package]]
 name = "flake8"
 version = "5.0.4"
 description = "the modular source code checker: pep8 pyflakes and co"
@@ -747,6 +763,23 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "requests-mock"
+version = "1.10.0"
+description = "Mock out responses from the requests package"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+fixtures = {version = "*", optional = true, markers = "extra == \"fixture\""}
+requests = ">=2.3,<3"
+six = "*"
+
+[package.extras]
+fixture = ["fixtures"]
+test = ["fixtures", "mock", "purl", "pytest", "sphinx", "testrepository (>=0.0.18)", "testtools", "requests-futures"]
+
+[[package]]
 name = "restructuredtext-lint"
 version = "1.4.0"
 description = "reStructuredText linter"
@@ -1114,7 +1147,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "5fd3dc98b14bdacf219fc24a1e9aa64527a0c3d818448753f9ba3ff740de5149"
+content-hash = "15bbcdb56d005c579d8226df42ab4e001b77b0d27e53a10c1b415c5b95687628"
 
 [metadata.files]
 alabaster = [
@@ -1153,6 +1186,7 @@ docutils = [
 ]
 dparse = []
 filelock = []
+fixtures = []
 flake8 = []
 flake8-bandit = []
 flake8-bugbear = []
@@ -1302,6 +1336,7 @@ pyyaml = [
     {file = "PyYAML-6.0.tar.gz", hash = "sha256:68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2"},
 ]
 requests = []
+requests-mock = []
 restructuredtext-lint = []
 "ruamel.yaml" = []
 "ruamel.yaml.clib" = []
