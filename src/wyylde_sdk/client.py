@@ -6,8 +6,10 @@ import requests
 from dacite import from_dict, MissingValueError
 
 from wyylde_sdk.models import (
+    ContactUserResource,
     EventResource,
     TalkResource,
+    TalkCounterResource,
     TestimonyResource,
     UserResource,
     VisitResource,
@@ -69,8 +71,23 @@ class Session(requests.Session):
         params.update(extra)
         return params
 
+    def get_count(self, endpoint: str, params: Optional[dict[str, Any]] = None, data_path: Optional[str] = None):
+        params = params or {}
+        params = self.make_params(**params)
+        response = self.get(
+            f'https://www.wyylde.com/rest/{endpoint}',
+            params=params
+        ).json()
+        if data_path is None:
+            for k in response['data']:
+                if k.startswith('nb_'):
+                    data_path = k
+                    break
+        return response['data'][data_path]
+
     def get_generate(
-        self, endpoint: str, klass: Type[T], params: Optional[dict[str, Any]]=None
+        self, endpoint: str, klass: Type[T], params: Optional[dict[str, Any]] = None,
+        data_path: Optional[str] = None,
     ) -> Iterable[T]:
         '''
         Generator function that yields elements of an array as their corresponding models.
@@ -92,7 +109,7 @@ class Session(requests.Session):
             f'https://www.wyylde.com/rest/{endpoint}',
             params=params
         ).json()
-        data_path = endpoint.split('/').pop()
+        data_path = endpoint.split('/').pop() if data_path is None else data_path
         while response is not None:
             next_id: str = response['data']['next']
             for item in response['data'][data_path]:
@@ -122,6 +139,14 @@ class WyyldeClient:
         params = {'nb': '20'}
         return self.session.get_generate('talks', TalkResource, params=params)
 
+    @property
+    def total_talks(self) -> TalkCounterResource:
+        params = {'nb': '20'}
+        return from_dict(
+            TalkCounterResource,
+            self.session.get_count('talks', params=params, data_path='counters')
+        )
+
     def delete_talk(self, talk_id: str):
         self.session.delete(
             f'https://www.wyylde.com/rest/talks/{talk_id}',
@@ -135,9 +160,26 @@ class WyyldeClient:
             json={'msg': message}
         )
 
-    def get_testimonies(self, user_id: str) -> Iterable[TestimonyResource]:
+    def testimonies(self, user_id: str) -> Iterable[TestimonyResource]:
         return self.session.get_generate(
             f'profile/{user_id}/testimonies', TestimonyResource
+        )
+
+    def total_testimonies(self, user_id: str) -> int:
+        return self.session.get_count(
+            f'profile/{user_id}/testimonies', data_path='nb_users'
+        )
+
+    @property
+    def contacts(self):
+        return self.session.get_generate(
+            'my/contacts', ContactUserResource, data_path='users'
+        )
+
+    @property
+    def total_contacts(self):
+        return self.session.get_count(
+            'my/contacts', data_path='nb_users'
         )
 
     @property

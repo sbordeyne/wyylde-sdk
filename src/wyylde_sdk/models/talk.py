@@ -20,3 +20,11 @@ class TalkResource:
     format: Optional[str] = None
     deny_write: Optional[str] = None
     match_seeks: Optional[bool] = None
+
+
+@dataclass
+class TalkCounterResource:
+    received: int
+    sent: int
+    sentunread: int
+    unread: int
