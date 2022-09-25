@@ -7,6 +7,7 @@ from dacite import from_dict, MissingValueError
 
 from wyylde_sdk.models import (
     ContactUserResource,
+    CrushResource,
     EventResource,
     TalkResource,
     TalkCounterResource,
@@ -214,4 +215,13 @@ class WyyldeClient:
         }
         return self.session.get_generate(
             'my/visits', VisitResource, params=params
+        )
+
+    @property
+    def crushes(self) -> Iterable[CrushResource]:
+        params = {
+            'version': self.session.wyylde_version,
+        }
+        return self.session.get_generate(
+            'my/crush', CrushResource, params=params, data_path='crushes'
         )
