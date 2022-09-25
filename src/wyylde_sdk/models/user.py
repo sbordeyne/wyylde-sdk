@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 @dataclass
 class UserResource:
@@ -8,7 +8,7 @@ class UserResource:
     blacklisted: Optional[bool] = False
     deleted: Optional[bool] = False
     blocked: Optional[bool] = False
-    online: Optional[bool] = False
+    online: Optional[Union[str, bool]] = False
     url_id: Optional[str] = None
     profile_type: Optional[int] = None
     certified: Optional[bool] = None
