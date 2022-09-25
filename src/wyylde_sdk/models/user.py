@@ -4,14 +4,14 @@ from typing import Optional
 @dataclass
 class UserResource:
     id: int
-    blocked: bool
     nickname: str
-    blacklisted: bool
-    deleted: bool
+    blacklisted: Optional[bool] = False
+    deleted: Optional[bool] = False
+    blocked: Optional[bool] = False
+    online: Optional[bool] = False
     url_id: Optional[str] = None
     profile_type: Optional[int] = None
     certified: Optional[bool] = None
-    online: Optional[str] = None
     tonight: Optional[bool] = None
     week_availability: Optional[bool] = None
     device: Optional[str] = None
