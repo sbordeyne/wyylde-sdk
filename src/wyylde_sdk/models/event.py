@@ -6,7 +6,7 @@ from typing import Any, Optional
 class EventOwnerResource:
     id: str
     type: str
-    name: str
+    name: Optional[str] = ''
     status: Optional[str] = None
     pic: Optional[str] = None
 
@@ -16,6 +16,8 @@ class EventPricingResource:
     man: Optional[int]
     woman: Optional[int]
     couple: Optional[int]
+    trav: Optional[int]
+    trans: Optional[int]
 
 
 @dataclass

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wyylde-sdk"
-version = "1.3.7"
+version = "1.3.8"
 description = "Wyylde SDK"
 authors = ["Dogeek <simon.bordeyne@gmail.com>"]
 license = "MIT"

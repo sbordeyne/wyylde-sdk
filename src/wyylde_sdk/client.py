@@ -79,7 +79,7 @@ class Session(requests.Session):
             f'https://www.wyylde.com/rest/{endpoint}',
             params=params
         ).json()
-        if response is None:
+        if response is None or 'data' not in response or response['data'] is None:
             return 0
         if data_path is None:
             for k in response['data']:
