@@ -121,7 +121,7 @@ class Session(requests.Session):
                         file=sys.stderr
                     )
                     continue
-            if next_id is not None:
+            if next_id is None:
                 break
             response = self.get(
                 f'https://www.wyylde.com/rest/{endpoint}/{next_id}',
