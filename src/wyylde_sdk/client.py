@@ -84,7 +84,7 @@ class Session(requests.Session):
                 if k.startswith('nb_'):
                     data_path = k
                     break
-        return response['data'].get(data_path, 0)
+        return response.get('data', {}).get(data_path, 0)
 
     def get_generate(
         self, endpoint: str, klass: Type[T], params: Optional[dict[str, Any]] = None,
