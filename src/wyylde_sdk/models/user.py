@@ -4,7 +4,7 @@ from typing import Optional, Union
 @dataclass
 class UserResource:
     id: int
-    nickname: str
+    nickname: Optional[str] = ''
     blacklisted: Optional[bool] = False
     deleted: Optional[bool] = False
     blocked: Optional[bool] = False
