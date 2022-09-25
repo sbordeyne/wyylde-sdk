@@ -72,7 +72,7 @@ class Session(requests.Session):
         params.update(extra)
         return params
 
-    def get_count(self, endpoint: str, params: Optional[dict[str, Any]] = None, data_path: Optional[str] = None):
+    def get_count(self, endpoint: str, params: Optional[dict[str, Any]] = None, data_path: Optional[str] = None) -> int:
         params = params or {}
         params = self.make_params(**params)
         response = self.get(
@@ -84,7 +84,7 @@ class Session(requests.Session):
                 if k.startswith('nb_'):
                     data_path = k
                     break
-        return response['data'][data_path]
+        return response['data'].get(data_path, 0)
 
     def get_generate(
         self, endpoint: str, klass: Type[T], params: Optional[dict[str, Any]] = None,
