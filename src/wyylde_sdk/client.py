@@ -79,6 +79,8 @@ class Session(requests.Session):
             f'https://www.wyylde.com/rest/{endpoint}',
             params=params
         ).json()
+        if response is None:
+            return 0
         if data_path is None:
             for k in response['data']:
                 if k.startswith('nb_'):
