@@ -1,5 +1,22 @@
 from dataclasses import dataclass
+from enum import IntEnum
 from typing import Optional, Union
+
+
+class ProfileType(IntEnum):
+    COUPLE_HETERO = 3
+    COUPLE_FBI = 4
+    COUPLE_HBI = 5
+    COUPLE_BI = 6
+    WOMAN_HETERO = 2
+    WOMAN_BI = 9
+    WOMAN_HOMO = 10
+    MAN_HETERO = 1
+    MAN_BI = 7
+    MAN_HOMO = 8
+    TRAV = 12
+    TRANS = 13
+
 
 @dataclass
 class UserResource:
@@ -10,7 +27,7 @@ class UserResource:
     blocked: Optional[bool] = False
     online: Optional[Union[str, bool]] = False
     url_id: Optional[str] = None
-    profile_type: Optional[int] = None
+    profile_type: Optional[ProfileType] = None
     certified: Optional[bool] = None
     tonight: Optional[bool] = None
     week_availability: Optional[bool] = None
@@ -27,19 +44,30 @@ class UserResource:
     p1_gender: Optional[str] = None
 
     @property
-    def count_people(self):
-        return (self.p0_gender is not None) + (self.p1_gender is not None)
-
-    @property
     def is_couple(self) -> bool:
-        # Is a couple : there is a second user and the genders
-        # of both users are different (heterosexual couple)
-        return self.count_people == 2 and self.p0_gender != self.p1_gender
+       return self.profile_type in (
+        ProfileType.COUPLE_BI, ProfileType.COUPLE_FBI,
+        ProfileType.COUPLE_HBI, ProfileType.COUPLE_HETERO,
+    )
 
     @property
     def is_lady(self) -> bool:
-        return self.count_people == 1 and 'woman' in (self.p0_gender, self.p1_gender)
+        return self.profile_type in (
+            ProfileType.WOMAN_HOMO, ProfileType.WOMAN_BI,
+            ProfileType.WOMAN_HETERO,
+        )
 
     @property
     def is_man(self) -> bool:
-        return self.count_people == 1 and 'man' in (self.p0_gender, self.p1_gender)
+        return self.profile_type in (
+            ProfileType.MAN_HOMO, ProfileType.MAN_BI,
+            ProfileType.MAN_HETERO,
+        )
+
+    @property
+    def is_trav(self) -> bool:
+        return self.profile_type == ProfileType.TRAV
+
+    @property
+    def is_trans(self) -> bool:
+        return self.profile_type == ProfileType.TRANS

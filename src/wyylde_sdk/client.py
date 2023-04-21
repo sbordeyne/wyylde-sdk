@@ -3,7 +3,7 @@ import sys
 from typing import Any, Iterable, Optional, TypeVar, Type
 
 import requests
-from dacite import from_dict, MissingValueError
+from dacite import from_dict, MissingValueError, Config
 
 from wyylde_sdk.models import (
     ContactUserResource,
@@ -14,6 +14,7 @@ from wyylde_sdk.models import (
     TestimonyResource,
     UserResource,
     VisitResource,
+    ProfileType,
 )
 
 
@@ -117,7 +118,9 @@ class Session(requests.Session):
             next_id: str = response['data']['next']
             for item in response['data'][data_path]:
                 try:
-                    yield from_dict(klass, item)
+                    yield from_dict(
+                        klass, item, config=Config(cast=[ProfileType])
+                    )
                 except MissingValueError as e:
                     print(
                         f'Missing value from {item} : {e.field_path}',
